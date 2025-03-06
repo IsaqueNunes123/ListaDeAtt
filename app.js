@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const port = 5002;
+const port = process.env.PORT || 5002;
 const connection = require('./db');
 const { readFile } = require('fs');
 const path = require('path');
@@ -11,9 +11,13 @@ module.exports = router;
 const PORT = process.env.PORT || 3000;
 
 app.use(cors()); 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get('/', (req, res) => {
+  res.send('Bem-vindo ao meu site!');
+});
 
 app.get('/par-ou-impar/:numero', (req, res) => {
   const numero = parseInt(req.params.numero); // Pega o número da URL
@@ -193,8 +197,11 @@ app.delete('/contatos/:id', (req, res) => {
 
 
 
+// app.listen(port, '0.0.0.0', () => {
+//   console.log(`Servidor rodando em http://0.0.0.0:${PORT}`);
+// });
 app.listen(port, '0.0.0.0', () => {
-  console.log(`Servidor rodando em http://0.0.0.0:${PORT}`);
+  console.log(`Servidor rodando em http://0.0.0.0:${port}`);
 });
 
 app.post('/vogais-consoantes/:texto', (req, res) => {
