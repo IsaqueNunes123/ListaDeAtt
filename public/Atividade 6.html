@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Tarefas</title>
+    <link rel="stylesheet" href="css/style.css"> <!-- Opcional: Adicione estilos CSS -->
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <img src="img/Voltar icone1.png" alt="Icone voltar">
+        </a>
+        <h1>Atividade 5 - Gerenciador de tarefas</h1>
+    </header>
+
+    <!-- Formulário para adicionar nova tarefa -->
+    <form id="task-form">
+        <input type="text" id="task-name" placeholder="Nome da Tarefa" required>
+        <input type="date" id="task-deadline">
+        <select id="task-priority">
+            <option value="Alta">Alta</option>
+            <option value="Média" selected>Média</option>
+            <option value="Baixa">Baixa</option>
+        </select>
+        <textarea id="task-description" placeholder="Descrição"></textarea>
+        <button type="submit">Adicionar Tarefa</button>
+    </form>
+
+    <!-- Tabela para exibir as tarefas -->
+    <table id="task-table" border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Status</th>
+                <th>Prazo</th>
+                <th>Prioridade</th>
+                <th>Descrição</th>
+                <th>Ações</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Tarefas serão inseridas aqui dinamicamente -->
+        </tbody>
+    </table>
+
+    <script>
+        // URL base da API
+        const apiUrl = 'http://localhost:5002/tarefas';
+
+        // Carregar tarefas ao iniciar
+        document.addEventListener('DOMContentLoaded', loadTasks);
+
+        // Formulário para adicionar tarefa
+        let addTask = async (event) => {
+            event.preventDefault();
+            const nome = document.getElementById('task-name').value;
+            const prazo = document.getElementById('task-deadline').value;
+            const prioridade = document.getElementById('task-priority').value;
+            const descricao = document.getElementById('task-description').value;
+
+            await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome, prazo, prioridade, descricao })
+            });
+            loadTasks();  // Recarregar tarefas
+            event.target.reset();  // Limpar formulário
+        }
+        document.getElementById('task-form').addEventListener('submit', addTask);
+
+        // Função para carregar tarefas
+        async function loadTasks() {
+            const response = await fetch(apiUrl);
+            const tasks = await response.json();
+            const tbody = document.querySelector('#task-table tbody');
+            tbody.innerHTML = '';  // Limpa a tabela antes de recarregar
+
+            tasks.forEach(task => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${task.id}</td>
+                    <td>${task.nome}</td>
+                    <td>${task.andamento}</td>
+                    <td>${task.prazo || '-'}</td>
+                    <td>${task.prioridade}</td>
+                    <td>${task.descricao || '-'}</td>
+                    <td>
+    <button onclick="editTask(${task.id}, '${task.nome}', '${task.prazo}', '${task.prioridade}', '${task.descricao}')">Editar</button>
+    <button onclick="deleteTask(${task.id})">Excluir</button>
+</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Função para deletar tarefa
+        async function deleteTask(id) {
+            await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+            loadTasks();  // Recarregar tarefas
+        }
+        function editTask(id, nome, prazo, prioridade, descricao) {
+    // Preencher o formulário com os dados da tarefa
+    document.getElementById('task-name').value = nome;
+    document.getElementById('task-deadline').value = prazo;
+    document.getElementById('task-priority').value = prioridade;
+    document.getElementById('task-description').value = descricao;
+
+    // Mudar o comportamento do formulário para atualizar a tarefa
+    const form = document.getElementById('task-form');
+    form.removeEventListener('submit', addTask);  // Remover o evento de adicionar tarefa
+    form.addEventListener('submit', (event) => updateTask(event, id));
+}
+
+// Função para atualizar tarefa
+async function updateTask(event, id) {
+    event.preventDefault();
+    const nome = document.getElementById('task-name').value;
+    const prazo = document.getElementById('task-deadline').value;
+    const prioridade = document.getElementById('task-priority').value;
+    const descricao = document.getElementById('task-description').value;
+
+    await fetch(`${apiUrl}/update/${id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome, prazo, prioridade, descricao, andamento: 'Em andamento' }) // Altere o andamento conforme necessário
+    });
+
+    loadTasks();  // Recarregar tarefas
+    event.target.reset();  // Limpar formulário
+    document.getElementById('task-form').removeEventListener('submit', updateTask);    document.getElementById('task-form').addEventListener('submit', addTask);
+}
+    </script>
+    <footer class="footer">
+        <p>&copy; 2024 Isaque Nunes - Todos os direitos reservados</p>
+    </footer>
+</body>
+</html>

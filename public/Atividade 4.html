@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <img src="img/Voltar icone1.png" alt="Icone voltar">
+        </a>
+        <h1>Atividade 2 - Calculadora de IMC</h1>
+    </header>
+    
+    <main>
+        <div class="form-container">
+            <form id="form-temperatura">
+                <label for="unidade1">Unidade de origem:</label>
+                <select id="unidade1">
+                    <option value="celsius">Celsius</option>
+                    <option value="fahrenheit">Fahrenheit</option>
+                    <option value="kelvin">Kelvin</option>
+                </select>
+
+                <label for="unidade2">Unidade de destino:</label>
+                <select id="unidade2">
+                    <option value="celsius">Celsius</option>
+                    <option value="fahrenheit">Fahrenheit</option>
+                    <option value="kelvin">Kelvin</option>
+                </select>
+
+                <label for="numero">Valor:</label>
+                <input type="number" id="numero" placeholder="Digite o valor">
+                <button type="submit" id="converterBtn">Converter</button>
+            </form>
+        </div>
+        <p id="resultado"></p>
+    </main>
+
+    <script>
+        const converterBtn = document.getElementById('converterBtn');
+        const unidade1 = document.getElementById('unidade1');
+        const unidade2 = document.getElementById('unidade2');
+        const numeroInput = document.getElementById('numero');
+        const resultado = document.getElementById('resultado');
+
+        // Listener para o evento de submit do formulário
+        document.getElementById('form-temperatura').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Evita o comportamento padrão do form
+
+            const numero = parseFloat(numeroInput.value); // Converte para número de ponto flutuante
+
+            if (isNaN(numero)) {
+                alert('Por favor, insira apenas números!');
+                return;
+            }
+
+            // Fazendo a requisição para a API
+            try {
+                const response = await fetch(`http://localhost:3000/converter/${unidade1.value}/${unidade2.value}/${numero}`);
+                const data = await response.json();
+                resultado.innerHTML = `${numero} ${data.unidade1} é igual a ${data.valor} ${data.unidade2}.`;
+            } catch (error) {
+                resultado.innerHTML = 'Erro ao verificar o número. Verifique se o servidor está rodando.';
+            }
+        });
+    </script>
+    <footer class="footer">
+        <p>&copy; 2024 Isaque Nunes - Todos os direitos reservados</p>
+    </footer>
+</body>
+</html>

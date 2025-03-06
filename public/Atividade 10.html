@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Contatos</title>
+    <link rel="stylesheet" href="css/style.css"> <!-- Opcional: Adicione estilos CSS -->
+</head>
+<body>
+
+    <header>
+        <a href="index.html">
+            <img src="img/Voltar icone1.png" alt="Icone voltar">
+        </a>
+        <h1>Atividade 10 - Agenda de contatos</h1>
+    </header>
+
+    <h1>Lista de Contatos</h1>
+
+    <!-- Formulário para adicionar novo contato -->
+    <form id="contact-form">
+        <input type="text" id="contact-name" placeholder="Nome do Contato" required>
+        <input type="text" id="contact-number" placeholder="Número de Telefone" required>
+        <input type="email" id="contact-email" placeholder="Email">
+        <button type="submit">Adicionar Contato</button>
+    </form>
+
+    <!-- Tabela para exibir os contatos -->
+    <table id="contact-table" border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Número</th>
+                <th>Email</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Contatos serão inseridos aqui dinamicamente -->
+        </tbody>
+    </table>
+
+    <script>
+        // URL base da API
+        const apiUrl = 'http://localhost:5002/contatos';
+
+        // Carregar contatos ao iniciar
+        document.addEventListener('DOMContentLoaded', loadContacts);
+
+        // Formulário para adicionar contato
+        async function addContact(event) {
+            event.preventDefault();
+            const nome = document.getElementById('contact-name').value;
+            const numero = document.getElementById('contact-number').value;
+            const email = document.getElementById('contact-email').value;
+
+            await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome, numero, email })
+            });
+            loadContacts();  // Recarregar contatos
+            event.target.reset();  // Limpar formulário
+        }
+        document.getElementById('contact-form').addEventListener('submit', addContact);
+
+        // Função para carregar contatos
+        async function loadContacts() {
+            const response = await fetch(apiUrl);
+            const contacts = await response.json();
+            const tbody = document.querySelector('#contact-table tbody');
+            tbody.innerHTML = '';  // Limpa a tabela antes de recarregar
+
+            contacts.forEach(contact => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${contact.id}</td>
+                    <td>${contact.nome}</td>
+                    <td>${contact.numero}</td>
+                    <td>${contact.email || '-'}</td>
+                    <td>
+                        <button onclick="editContact(${contact.id}, '${contact.nome}', '${contact.numero}', '${contact.email}')">Editar</button>
+                        <button onclick="deleteContact(${contact.id})">Excluir</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Função para deletar contato
+        async function deleteContact(id) {
+            await fetch(`${apiUrl}/${id}`, { method: 'DELETE' });
+            loadContacts();  // Recarregar contatos
+        }
+
+        // Função para editar contato
+        function editContact(id, nome, numero, email) {
+            // Preencher o formulário com os dados do contato
+            document.getElementById('contact-name').value = nome;
+            document.getElementById('contact-number').value = numero;
+            document.getElementById('contact-email').value = email;
+
+            // Mudar o comportamento do formulário para atualizar o contato
+            const form = document.getElementById('contact-form');
+            form.removeEventListener('submit', addContact);  // Remover o evento de adicionar contato
+            form.addEventListener('submit', (event) => updateContact(event, id));
+        }
+
+        // Função para atualizar contato
+        async function updateContact(event, id) {
+            event.preventDefault();
+            const nome = document.getElementById('contact-name').value;
+            const numero = document.getElementById('contact-number').value;
+            const email = document.getElementById('contact-email').value;
+
+            await fetch(`${apiUrl}/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome, numero, email })
+            });
+            loadContacts();  // Recarregar contatos
+            event.target.reset();  // Limpar formulário
+
+            // Resetar o comportamento do formulário para adicionar contato
+            const form = document.getElementById('contact-form');
+            form.removeEventListener('submit', (e) => updateContact(e, id));
+            form.addEventListener('submit', addContact);
+        }
+    </script>
+    <footer class="footer">
+        <p>&copy; 2024 Isaque Nunes - Todos os direitos reservados</p>
+    </footer>
+</body>
+</html>

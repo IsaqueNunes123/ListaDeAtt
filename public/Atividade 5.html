@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <img src="img/Voltar icone1.png" alt="Icone voltar">
+        </a>
+        <h1>Atividade 5 - Contador de palavra</h1>
+    </header>
+    
+    <main>
+        <div class="form-container">
+            <form id="form-palavras">
+                <label for="txtfiletoread">Selecione um arquivo .txt:</label>
+                <input type="file" id="txtfiletoread" accept=".txt" required/>
+                <button type="submit">Contar</button>
+            </form>
+        </div>
+        <p id="resultado"></p>
+    </main>
+
+    <script>
+        
+        const resultadoElement = document.getElementById('resultado');
+const formPalavras = document.getElementById('form-palavras');
+
+formPalavras.addEventListener('submit', function(event) {
+    event.preventDefault(); // Evita o recarregamento da página
+
+    const fileInput = document.getElementById('txtfiletoread');
+    const file = fileInput.files[0]; // Captura o arquivo selecionado
+
+    if (!file) {
+        resultadoElement.textContent = 'Por favor, selecione um arquivo.';
+        return;
+    }
+
+    const reader = new FileReader(); // Cria um novo FileReader
+
+    // Lê o arquivo como texto
+    reader.onload = function(e) {
+        const conteudo = e.target.result;
+        const numeroPalavras = contarPalavras(conteudo); // Conta as palavras
+        resultadoElement.textContent = `O arquivo tem ${numeroPalavras} palavras.`;
+    };
+
+    // Trata erros durante a leitura do arquivo
+    reader.onerror = function() {
+        resultadoElement.textContent = 'Erro ao ler o arquivo.';
+    };
+
+    reader.readAsText(file); // Inicia a leitura do arquivo como texto
+});
+
+// Função para contar palavras no texto
+function contarPalavras(texto) {
+    const palavras = texto.trim().split(/\s+/); // Divide o texto em palavras
+    return palavras.length; // Retorna a quantidade de palavras
+}
+    </script>
+    <footer class="footer">
+        <p>&copy; 2024 Isaque Nunes - Todos os direitos reservados</p>
+    </footer>
+</body>
+</html>

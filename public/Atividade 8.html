@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Senhas</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <img src="img/Voltar icone1.png" alt="Icone voltar">
+        </a>
+        <h1>Atividade 8 - Gerador de Senha</h1>
+    </header>
+  <div class="container">
+    <div class="controls">
+      <label for="length">Tamanho da senha:</label>
+      <input type="number" id="length" min="4" max="50" value="12">
+      
+      <label><input type="checkbox" id="uppercase"> Incluir letras maiúsculas</label>
+      <label><input type="checkbox" id="numbers"> Incluir números</label>
+      <label><input type="checkbox" id="symbols"> Incluir símbolos</label>
+    </div>
+    
+    <button id="generate">Gerar Senha</button>
+    <div class="output">
+      <input type="text" id="resultado" readonly>
+      <button type="submit" id="copy">Copiar</button>
+    </div>
+  </div>
+  
+  <script>
+    document.getElementById('generate').addEventListener('click', generatePassword);
+    document.getElementById('copy').addEventListener('click', copyToClipboard);
+
+function generatePassword() {
+  const length = document.getElementById('length').value;
+  const includeUppercase = document.getElementById('uppercase').checked;
+  const includeNumbers = document.getElementById('numbers').checked;
+  const includeSymbols = document.getElementById('symbols').checked;
+
+  const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
+  const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const numberChars = '0123456789';
+  const symbolChars = '!@#$%^&*()_+[]{}|;:,.<>?';
+
+  let allChars = lowercaseChars;
+  if (includeUppercase) allChars += uppercaseChars;
+  if (includeNumbers) allChars += numberChars;
+  if (includeSymbols) allChars += symbolChars;
+
+  let password = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * allChars.length);
+    password += allChars[randomIndex];
+  }
+
+  document.getElementById('resultado').value = password;
+}
+
+function copyToClipboard() {
+  const passwordField = document.getElementById('resultado');
+  passwordField.select();
+  document.execCommand('copy');
+  alert('Senha copiada para a área de transferência!');
+}
+  </script>
+</body>
+</html>

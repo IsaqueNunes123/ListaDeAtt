@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <img src="img/Voltar icone1.png" alt="Icone voltar">
+        </a>
+        <h1>Atividade  - Contador de Vogais e Consoantes</h1>
+    </header>
+    
+    <main>
+        <div class="form-container">
+            <form id="form-palavras">
+                <label for="text">Escreva um texto</label>
+                <input type="text" id="texto" required/>
+                <button type="submit">Contar</button>
+            </form>
+        </div>
+        <p id="resultado"></p>
+    </main>
+</body>
+</html>
+<footer class="footer">
+    <p>&copy; 2024 Isaque Nunes - Todos os direitos reservados</p>
+</footer>
+</html>    
+
+<script>
+    const formPalavras = document.getElementById('form-palavras');
+    const textoInput = document.getElementById('texto');
+    const resultadoElement = document.getElementById('resultado');
+
+    formPalavras.addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        const texto = textoInput.value.toLowerCase();
+
+        if (texto.trim() === "") {
+            alert('Por favor, insira um texto!');
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:5002/vogais-consoantes/${texto}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await response.json();
+            resultadoElement.innerHTML = `O texto tem ${data.vogais} vogais e ${data.consoantes} consoantes.`;
+        } catch (error) {
+            resultadoElement.innerHTML = 'Erro ao processar o texto. Verifique se o servidor está rodando.';
+        }
+    });
+</script>

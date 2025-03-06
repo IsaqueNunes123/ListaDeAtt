@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <img src="img/Voltar icone1.png" alt="Icone voltar">
+        </a>
+        <h1>Atividade 2 - Calculadora de IMC</h1>
+    </header>
+    
+    <main>
+        <div class="form-container">
+            <form id="form-IMC">
+                <input type="number" id="altura" placeholder="Altura em centímetros">
+                <input type="number" id="peso" placeholder="Peso em quilogramas">
+                <button type="submit">Calcular IMC</button>
+            </form>    
+        </div>
+        <p id="resultado"></p>
+    </main>
+
+    <script>
+        const formIMC = document.getElementById('form-IMC');
+        const alturaInput = document.getElementById('altura');
+        const pesoInput = document.getElementById('peso');
+        const resultado = document.getElementById('resultado');
+
+        formIMC.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const altura = parseFloat(alturaInput.value) / 100; // Converter para metros
+            const peso = parseFloat(pesoInput.value);
+
+            if (isNaN(peso) || isNaN(altura)) {
+                alert('Por favor, insira apenas números!');
+                return;
+            }
+
+            const imc = peso / altura ** 2;
+
+            if (imc < 18.5) {
+                resultado.innerHTML = `Seu IMC é: ${imc.toFixed(2)}, Você está abaixo do peso ideal!`;
+            } else if (imc >= 18.5 && imc < 24.9) {
+                resultado.innerHTML = `Seu IMC é: ${imc.toFixed(2)}, Parabéns! Você está no peso ideal!`;
+            } else if (imc >= 25 && imc < 29.9) {
+                resultado.innerHTML = `Seu IMC é: ${imc.toFixed(2)}, Você está com sobrepeso!`;
+            } else if (imc >= 30 && imc < 34.9) {
+                resultado.innerHTML = `Seu IMC é: ${imc.toFixed(2)}, Você está obeso!`;
+            } else if (imc >= 35) {
+                resultado.innerHTML = `Seu IMC é: ${imc.toFixed(2)}, Você está com obesidade extrema!`;
+            }
+        });
+    </script>
+    <footer class="footer">
+        <p>&copy; 2024 Isaque Nunes - Todos os direitos reservados</p>
+    </footer>
+</body>
+</html>

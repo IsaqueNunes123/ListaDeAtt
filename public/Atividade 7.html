@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <img src="img/Voltar icone1.png" alt="Icone voltar">
+        </a>
+        <h1>Atividade 7 - Próximo ano</h1>
+    </header>
+    
+    <main>
+        <div class="form-container">
+            <form id="form-media">
+                <input type="date" id="data" placeholder="Coloque uma Data">
+                <button type="submit">Calcular Quanto tempo falta para o próximo ano</button>
+            </form>    
+        </div>
+        <p id="resultado"></p>
+    </main>
+</body>
+
+    <script>
+        const formData = document.getElementById('form-media');
+        const data = document.getElementById('data');
+
+
+
+        formData.addEventListener('submit', function(event){
+            event.preventDefault();
+
+            const date = new Date(data.value);
+            
+            if(isNaN(date.getTime())){
+                alert('Por favor, insira uma data válida!');
+                return;
+            }
+
+            function tempoParaProximoAno(data){
+                // const hoje = new Date();
+                const proximoAno = new Date(date.getFullYear() + 1, 0, 1);
+                const diferencaEmMilisegundos = proximoAno.getTime() - data.getTime();
+                const diferencaEmDias = Math.ceil(diferencaEmMilisegundos / (1000 * 60 * 60 * 24));
+
+                return diferencaEmDias;
+            }
+
+            const diasRestantes = tempoParaProximoAno(date);
+            resultado.innerHTML = `Faltam ${diasRestantes} dias para ${(date.getFullYear() + 1)}.`;
+
+        })
+
+    </script>
+    <footer class="footer">
+        <p>&copy; 2024 Isaque Nunes - Todos os direitos reservados</p>
+    </footer>
+</body>
+</html>

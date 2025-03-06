@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <img src="img/Voltar icone1.png" alt="Icone voltar">
+        </a>
+        <h1>Atividade 2 - Calculadora de IMC</h1>
+    </header>
+    
+    <main>
+        <div class="form-container">
+            <form id="form-parimpar">
+                <input type="number" id="numero" placeholder="Digite um número inteiro">
+                <button type="submit">Verificar</button>
+            </form>
+        </div>
+        <p id="resultado"></p>
+    </main>
+
+    <script>
+        const numeroInput = document.getElementById('numero');
+        const resultadoElement = document.getElementById('resultado');
+        const formParImpar = document.getElementById('form-parimpar');
+
+
+        formParImpar.addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const numero = parseInt(numeroInput.value); 
+
+            if (isNaN(numero)) {
+                alert('Por favor, insira apenas números!');
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/par-ou-impar/${numero}`);
+                
+                const data = await response.json();
+                resultadoElement.innerHTML = `O número ${data.numero} é ${data.resultado}.`;
+            } catch (error) {
+                resultadoElement.innerHTML = 'Erro ao verificar o número.  Verifique se o servidor está rodando.';
+            }
+
+        });
+    </script>
+    <footer class="footer">
+        <p>&copy; 2024 Isaque Nunes - Todos os direitos reservados</p>
+    </footer>
+</body>
+</html>

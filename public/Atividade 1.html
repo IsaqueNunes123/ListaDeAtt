@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <a href="index.html">
+            <img src="img/Voltar icone1.png" alt="Icone voltar">
+        </a>
+        <h1>Atividade 1 - Média de notas</h1>
+    </header>
+    
+    <main>
+        <div class="form-container">
+            <form id="form-media">
+                <input type="number" id="nota1" placeholder="Nota 1">
+                <input type="number" id="nota2" placeholder="Nota 2">
+                <input type="number" id="nota3" placeholder="Nota 3">
+                <button type="submit">Calcular Média</button>
+            </form>    
+        </div>
+        <p id="resultado"></p>
+    </main>
+</body>
+
+    <script>
+        const formMedia = document.getElementById('form-media');
+        const nota1 = document.getElementById('nota1');
+        const nota2 = document.getElementById('nota2');
+        const nota3 = document.getElementById('nota3');
+        const resultado = document.getElementById('resultado');
+
+
+        formMedia.addEventListener('submit', function(event){
+            event.preventDefault();
+
+            const n1 = parseFloat(nota1.value);
+            const n2 = parseFloat(nota2.value);
+            const n3 = parseFloat(nota3.value);
+
+            if(isNaN(n1) || isNaN(n2) || isNaN(n3)){
+                alert('Por favor, insira apenas números!');
+                return;
+            }
+
+            const media = (n1 + n2 + n3) / 3;
+            if(media >= 7)
+                resultado.innerHTML = `Sua média é: ${media.toFixed(2)}, Parabéns! Você foi aprovado!`;
+            else    
+                resultado.innerHTML = `Sua média é: ${media.toFixed(2)}, Infelizmente você foi reprovado!`;
+        })
+    </script>
+    <footer class="footer">
+        <p>&copy; 2024 Isaque Nunes - Todos os direitos reservados</p>
+    </footer>
+</body>
+</html>
