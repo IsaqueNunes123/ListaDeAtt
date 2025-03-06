@@ -8,6 +8,7 @@ const path = require('path');
 const router = express.Router();
 const cors = require('cors');
 module.exports = router;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors()); 
 app.use(express.static('public'));
@@ -192,8 +193,8 @@ app.delete('/contatos/:id', (req, res) => {
 
 
 
-app.listen(port, () => {
-  console.log(`Servidor rodando em http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Servidor rodando em http://0.0.0.0:${PORT}`);
 });
 
 app.post('/vogais-consoantes/:texto', (req, res) => {
